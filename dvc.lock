@@ -1,0 +1,90 @@
+schema: '2.0'
+stages:
+  get-features:
+    cmd: python3 scripts/get_features.py train.csv
+    deps:
+    - path: scripts/get_features.py
+      hash: md5
+      md5: 201581316747da3476762681a2312dce
+      size: 2124
+    - path: train.csv
+      hash: md5
+      md5: 0f91768b9798c3fa2584fbed4deba7a5
+      size: 210076
+    outs:
+    - path: data/stage1
+      hash: md5
+      md5: 4f5a8bdefd94928f92e923efe45e7e63.dir
+      size: 106077
+      nfiles: 1
+  fill-na:
+    cmd: python3 scripts/fill_na.py  data/stage1/train.csv
+    deps:
+    - path: data/stage1/train.csv
+      hash: md5
+      md5: c7e4988d4f6f51ae61e8f60dba0f40d6
+      size: 106077
+    - path: scripts/fill_na.py
+      hash: md5
+      md5: fa9a33bcc4f543305253d815179e921c
+      size: 3569
+    outs:
+    - path: data/stage2
+      hash: md5
+      md5: dbd0a2537f59dd73b3f47316e876103d.dir
+      size: 106393
+      nfiles: 1
+  change_text:
+    cmd: python3 scripts/change_text_to_numeric.py data/stage2/train.csv
+    deps:
+    - path: data/stage2/train.csv
+      hash: md5
+      md5: d8d3724930ec1c0f83a764081612fdec
+      size: 106393
+    - path: scripts/change_text_to_numeric.py
+      hash: md5
+      md5: d9a0854def7cd1625803c2b9911e5f4e
+      size: 2838
+    outs:
+    - path: data/stage3
+      hash: md5
+      md5: 88c8e77f7a6d13784c63c91f95f19b2b.dir
+      size: 51794
+      nfiles: 1
+  split:
+    cmd: python3 scripts/train_test_split.py data/stage3/train.csv
+    deps:
+    - path: data/stage3/train.csv
+      hash: md5
+      md5: f288865f08978d85027247e633a11498
+      size: 51794
+    - path: scripts/train_test_split.py
+      hash: md5
+      md5: 4b0b16f98049a193e8c185957df5bd96
+      size: 1796
+    outs:
+    - path: data/stage4
+      hash: md5
+      md5: 2b2459984956d1d68507a3e8ded2a8e6.dir
+      size: 59039
+      nfiles: 2
+  train:
+    cmd: python3 model/dt.py data/stage4/train.csv model.pkl
+    deps:
+    - path: data/stage4/train.csv
+      hash: md5
+      md5: e451a438c0e3cd8e656957c73cf68228
+      size: 41307
+    - path: model/dt.py
+      hash: md5
+      md5: 53793ef768dd71d3f4b2b6545c917a1e
+      size: 1637
+    params:
+      params.yaml:
+        train.normalize: false
+        train.seed: 42
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: 982f1912fd097d55e3eca1b7136b35e3
+      size: 12293
