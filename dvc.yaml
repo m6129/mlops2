@@ -37,4 +37,13 @@ stages:
       - train.normalize
     outs:
       - models/model.pkl
+  evaluate:
+    cmd: python3 model/evaluate.py data/stage4/test.csv models/model.pkl
+    deps:
+    - data/stage4/test.csv
+    - models/model.pkl
+    - model/evaluate.py
+    metrics:
+    - evaluate/metrics.json:
+        cache: false
   
