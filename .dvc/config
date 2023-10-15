@@ -1,0 +1,4 @@
+[core]
+    remote = my_remote_storage
+['remote "my_remote_storage"']
+    url = ssh://data-srv@192.168.56.109:/opt/datasets/
